@@ -1,0 +1,267 @@
+#!/bin/bash
+
+
+boost_timeout=3
+
+
+
+export boost_timeout
+
+start_app=5
+
+WARP_CFG=$(( 11 + 0 ))
+
+faction_init_x=787
+faction_init_y=227
+faction_rel_y=43
+
+# attack buttons
+attack_a_x=474
+attack_a_y=149
+attack_b_x=534
+attack_b_y=149
+
+
+
+# troops deployment/attack points
+point_a_x=153
+point_a_y=409
+point_b_x=865
+point_b_y=485
+point_c_x=475
+point_c_y=500
+
+scout_x=803
+scout_y=83
+
+
+faction_pt_x=679
+faction_pt_y=652
+
+
+lvl_x=643
+lvl_y=486
+
+
+marines_x=258
+marines_y=567
+rhinos_x=458
+rhinos_y=567
+bomba_x=558
+bomba_y=567
+
+
+slider_x=208 # 363
+slider_y=696 # 696
+
+RANDOM_dev=`source ./rangen 9 14`
+RANDOM_MARINES=`source ./rangen 25 35`
+RANDOM_BOMBAS=`source ./rangen 18 25`
+RANDOM_RHINOS=`source ./rangen 18 25`
+FACTION_SLEEP=`source ./rangen 20 30`
+
+
+
+dev_sleep=1
+
+
+
+gohome (){
+    xdotool mousemove --sync $faction_init_x $faction_init_y
+    sleep 2;
+}
+
+
+check_lvl_up(){
+    xdotool mousemove --sync $lvl_x $lvl_y
+    color=$( ./getcolor.py $lvl_x $lvl_y 1 )
+    echo "lvl up color $color -- $lvl_x $lvl_y"
+    if [ $color -eq $ZERO ]
+    then
+	echo "lvl up color found $lvl_x $lvl_y"
+	xdotool click 1
+	sleep 2
+    fi
+}
+
+move_base_left(){
+    xdotool mousemove --sync $point_b_x $point_b_y
+    xdotool mousedown 1
+    xdotool mousemove_relative --sync --polar 270 200
+    sleep 1
+    xdotool mouseup 1
+}
+## -- Check for no bldg
+check_no_bldg (){
+local no_bldg_x=452
+local no_bldg_y=402
+
+xdotool mousemoe --sync $no_bldg_x $no_bldg_y
+color=$( ./getcolor.py $no_bldg_x $no_bldg_y 2 )
+if [ $color -eq 0 ] 
+then
+    xdotool click 1
+fi
+}
+
+doend () {
+local troops_x=869
+local troops_y=82
+local base_attack_x=504
+local base_attack_y=419
+local ZERO=$(( 0 + 0 ))
+
+for i in {0..35}
+do
+sleep 2
+
+# scout
+xdotool mousemove --sync $scout_x $scout_y
+color=$( ./getcolor.py $scout_x $scout_y 0 )
+echo "scout color $color"
+if [ $color -eq $ZERO ]
+then
+    check_lvl_up
+    echo "scout color found $scout_x $scout_y"
+    xdotool mousemove --sync $scout_x $scout_y && xdotool click 1
+    break
+fi
+done
+sleep 4
+check_lvl_up
+check_no_bldg
+xdotool mousemove --sync $faction_pt_x $faction_pt_y  && xdotool click 1
+sleep 4;
+
+}
+
+
+
+
+attack (){
+local dev_x=658
+local dev_y=567
+local dec_x=758
+local dec_y=567
+local check_bldg_x=453
+local check_bldg_y=406
+local ZERO=$(( 0 + 0 ))
+
+    move_base_left
+
+    xdotool mousemove --sync $dec_x $dec_y && xdotool click --repeat 9  1
+    xdotool mousemove --sync $point_b_x $point_b_y && xdotool click 1
+    sleep $dev_sleep;
+    xdotool mousemove --sync $dev_x $dev_y && xdotool click --repeat $RANDOM_dev 1
+    xdotool mousemove --sync $point_b_x $point_b_y && xdotool click 1
+    sleep $FACTION_SLEEP;
+    echo 0
+}
+
+
+moveA1(){
+local HOME_X=187
+local HOME_Y=152
+local A1_X=330
+local A1_Y=192
+printf "Attacking with A1\n"
+    for i in {0..1} 
+    do
+
+	xdotool mousemove --sync $HOME_X $HOME_Y && sleep 1;
+	xdotool click 1 && sleep 1;
+	xdotool mousemove --sync $A1_X $A1_Y && sleep 1;
+	xdotool click 1 && sleep 1;
+    done
+    
+}
+
+attack_a1(){
+
+local A1_BOMBA_X=558
+local A1_BOMBA_Y=567
+local A1_DEV_X=658
+local A1_DEV_Y=567
+local A1_BOMBAS=`source ./rangen 11 15`
+local A1_DEV=`source ./rangen 10 15`
+
+    xdotool mousemove --sync $A1_BOMBA_X $A1_BOMBA_Y && xdotool click --repeat $A1_BOMBAS  1
+    xdotool mousemove --sync $A1_DEV_X $A1_DEV_Y && xdotool click --repeat $A1_DEV 1
+    sleep 1
+    xdotool mousemove --sync $point_b_x $point_b_y && xdotool click 1
+    sleep $FACTION_SLEEP;
+}
+
+
+##
+## Select the PVP section
+## if it is start refresh it
+## then scout the top 3
+## Attack them
+##
+pvp_select(){
+local pvp_ref_x=$(( 805 + 0 ))
+local pvp_ref_y=$(( 594 + 0 ))
+
+local pvp_sel_x=$(( 747 + 0 ))
+local pvp_sel_y=$(( 232 + 0 ))
+
+local pvp_tab_x=$(( 397 + 0 ))
+local pvp_tab_y=$(( 150 + 0 ))
+
+local pvp_arr_x=$(( 849 + 0 ))
+local pvp_arr_y=$(( 376 + 0 ))
+# FACTION_SLEEP=`source ./rangen 75 85`
+RANDOM_dev=`source ./rangen 3 7`
+dev_sleep=2 
+point_b_x=771
+point_b_y=461
+
+if [ -z $1 ]
+then
+    printf "Missing parameter for pvp_select\n"
+    return 0
+fi
+printf "Starting PVP $1\n"
+case $1 in
+    0) 
+	# refresh page
+	# select pvp tab
+	xdotool mousemove --sync $pvp_tab_x $pvp_tab_y && xdotool click 1
+	sleep 4
+	xdotool mousemove --sync $pvp_ref_x $pvp_ref_y && xdotool click 1
+	sleep 6
+	xdotool mousemove --sync $pvp_arr_x $pvp_arr_y && xdotool click --repeat 5 1
+	xdotool mousemove --sync $pvp_sel_x $pvp_sel_y && xdotool click 1
+	;;
+    *)
+	# don't need to select pvp tab select the next pvp
+	pvp_relative_y=$(( ($1 * $faction_rel_y ) + $pvp_sel_y ))
+	xdotool mousemove --sync $pvp_sel_x $pvp_relative_y && xdotool click 1 
+	## don't do anything
+esac
+sleep 5
+}
+
+faction_select(){
+local faction_tab_x=714
+local faction_tab_y=150
+    sleep 2;
+    xdotool mousemove --sync $faction_tab_x $faction_tab_y && xdotool click 1
+    sleep 2;
+    
+}
+
+
+msg_attack() {
+local online_ply_x=503
+local online_ply_y=419
+
+local shield_x=457
+local shield_y=484
+    xdotool mousemove --sync $shield_x $shield_y && xdotool click 1
+    xdotool mousemove --sync $online_ply_x $online_ply_y && xdotool click 1
+}
+
+
+

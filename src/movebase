@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+WID=`xdotool search "Edgeworld" | head -1`
+xdotool windowactivate --sync $WID
+
+
+source ./edge_env
+
+
+move_base_left

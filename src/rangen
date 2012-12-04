@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ "$#" == "0" ]; then
+   echo "$USAGE rangen number number"
+   exit 1
+fi
+
+FLOOR=$1
+RANGE=$2
+number=0   #initialize
+while [ "$number" -le $FLOOR ]
+do
+  number=$RANDOM
+  let "number %= $RANGE"  # Scales $number down within $RANGE.
+done
+echo "$number"
