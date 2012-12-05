@@ -58,6 +58,11 @@ case $WARP in
 	if [ -e "/home/prasad/edgeworld/pvp" ]
 	then
 	    pvp_select $WARP
+	    color=$( check_pvp_ready_state )
+	    if [ $color -eq 0 ]; then
+		printf "Error in pvp selection"
+		continue
+	    fi
 	    xdotool mousemove --sync $attack_a_x $attack_a_y  && xdotool click 1
 	    msg_attack
 	else
@@ -70,6 +75,12 @@ case $WARP in
 	if [ -e "/home/prasad/edgeworld/pvp" ]
 	then
 	    pvp_select $(( $WARP - 3 ))
+	    color=$( check_pvp_ready_state )
+	    if [ $color -eq 0 ]; then
+		printf "Error in pvp selection"
+		continue
+	    fi
+
 	    xdotool mousemove --sync $attack_b_x $attack_b_y  && xdotool click 1
 	    msg_attack
 	else
