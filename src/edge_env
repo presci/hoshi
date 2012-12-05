@@ -64,6 +64,9 @@ FACTION_SLEEP=`source ./rangen 20 30`
 
 dev_sleep=1
 
+pvp_arr_x=$(( 854 + 0 ))
+pvp_arr_y=$(( 354 + 0 ))
+
 
 
 gohome (){
@@ -209,8 +212,6 @@ local pvp_sel_y=$(( 232 + 0 ))
 local pvp_tab_x=$(( 397 + 0 ))
 local pvp_tab_y=$(( 150 + 0 ))
 
-local pvp_arr_x=$(( 849 + 0 ))
-local pvp_arr_y=$(( 376 + 0 ))
 # FACTION_SLEEP=`source ./rangen 75 85`
 RANDOM_dev=`source ./rangen 3 7`
 dev_sleep=2 
@@ -265,3 +266,10 @@ local shield_y=484
 
 
 
+check_pvp_ready_state(){
+local x=$pvp_arr_x
+local y=$pvp_arr_y
+xdotool mousemove --sync $x $y
+color=$( ./getcolor.py $x $y 2 )
+echo $color
+}
