@@ -33,12 +33,13 @@ def get_color_name(requested_color):
         actual_name=None
     return closest_name
  
-# print get_pixel_colour(869, 82)
+
 K=get_pixel_color(int(sys.argv[1]), int(sys.argv[2]))
-# print "%03d%03d%03d" % K
+
 red=(re.compile("red"), re.compile("maroon"), re.compile("brown"))
 green=(re.compile("green"), re.compile("een"))
 blue=(re.compile("blue"), re.compile("aqua"), re.compile("cyan"))
+gray=(re.compile("gray"), re.compile("lightgray"))
 Color=get_color_name(K)
 
 
@@ -64,5 +65,13 @@ if int( sys.argv[3]) == 2 :
             print 0
             sys.exit( 0)
 
+# gray
+if int( sys.argv[3]) == 3 :
+    for w in gray:
+        tmp=w.findall(Color)
+        if len(tmp) > 0:
+            print 0
+            sys.exit( 0)
 
 print 1
+sys.exit(1)

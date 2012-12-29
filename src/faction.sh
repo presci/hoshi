@@ -1,15 +1,19 @@
 #!/bin/bash
 
 
-WID=`xdotool search "Edgeworld" | head -1`
+WID=`xdotool search "" | head -1`
 xdotool windowactivate --sync $WID
+sleep 10
+
+source ./config
 
 FACTION=$(( 0 + 0 ))
 WARP=$(( 0 + 0 ))
+PVP=$(( 1 + 0 ))
+
+PVP_SELECT=$(( 0 + 0 ))
 
 factionmove(){
-local faction_sel_x=$(( 714 + 0 ))
-local faction_sel_y=$(( 150 + 0 ))
 
     xdotool mousemove --sync $faction_sel_x $faction_sel_y && xdotool click 1
     sleep 2
@@ -34,6 +38,14 @@ local faction_sel_y=$(( 150 + 0 ))
 }
 
 
+inc_warp_gate(){
+WARP=$(( $WARP + 1 ))
+if [[ $WARP -gt $WARP_CFG ]];
+then
+    WARP=$(( 0 + 0 ))
+fi
+}
+
 
 
 
@@ -46,25 +58,36 @@ if [ -e  ./edge_env ]; then
     source ./edge_env
 fi
 
-
 gohome
 
 ## moving between faction
 
 printf "Warp %03d\n" $WARP
+if [ $WARP -eq 0 ]
+then
+    if [ -e "/home/prasad/edgeworld/pvp" ]
+    then
+	lockdownlatch=0
+	PVP=$(( 0 + 0 ))
+    else
+	PVP=$(( 0 + 1 ))
+    fi
+fi
+
 
 case $WARP in
     0|1|2)
-	if [ -e "/home/prasad/edgeworld/pvp" ]
+	if [ $PVP -eq 0 ]
 	then
-	    pvp_select $WARP
-	    color=$( check_pvp_ready_state )
-	    if [ $color -eq 0 ]; then
-		printf "Error in pvp selection"
+	    pvp_select $PVP_SELECT
+	    sleep 2;
+	    pvp_attack $attack_a_x $attack_a_y $WARP
+	    result=$?
+	    if [ $result -eq 1 ] 
+	    then
+		inc_warp_gate
 		continue
 	    fi
-	    xdotool mousemove --sync $attack_a_x $attack_a_y  && xdotool click 1
-	    msg_attack
 	else
 	    faction_select
 	    factionmove
@@ -72,17 +95,16 @@ case $WARP in
 	fi
 ;;
     3|4|5)
-	if [ -e "/home/prasad/edgeworld/pvp" ]
+	if [ $PVP -eq 0 ]
 	then
-	    pvp_select $(( $WARP - 3 ))
-	    color=$( check_pvp_ready_state )
-	    if [ $color -eq 0 ]; then
-		printf "Error in pvp selection"
+	    pvp_select $PVP_SELECT
+	    pvp_attack $attack_b_x $attack_b_y $WARP
+	    result=$?
+	    if [ $result -eq 1 ] 
+	    then
+		inc_warp_gate
 		continue
 	    fi
-
-	    xdotool mousemove --sync $attack_b_x $attack_b_y  && xdotool click 1
-	    msg_attack
 	else
 	    faction_select
 	    factionmove
@@ -122,6 +144,11 @@ then
 WARP=$(( 0 + 0 ))
 fi
 
+PVP_SELECT=$(( $PVP_SELECT + 1 ))
+if [[ $PVP_SELECT -gt $PVP_SELECT_CFG ]];
+then
+PVP_SELECT=$(( 0 + 0 ))
+fi
 
 
 ## time lapse calculator

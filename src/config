@@ -2,3 +2,76 @@
 
 
 lockdownlatch=0
+
+ZERO=$(( 0 + 0 ))
+
+TERMINATE=$(( 0 + 0 ))
+
+# faction button at the bottom
+faction_pt_x=680
+faction_pt_y=706
+
+
+# faction tab
+faction_sel_x=$(( 699 + 0 ))
+faction_sel_y=$(( 154 + 0 ))
+
+# init faction
+faction_init_x=703
+faction_init_y=372
+faction_rel_x=50
+faction_rel_y=43
+
+# attack buttons Warp buttons
+attack_a_x=474
+attack_a_y=106
+attack_b_x=534
+attack_b_y=106
+
+# scout button after the attack is complete top red corner
+scout_x=802
+scout_y=52
+
+# lvl up dialog 
+lvl_x=646
+lvl_y=498
+
+
+# A1 selection
+HOME_X=183 # home on left corner
+HOME_Y=116 
+A1_X=305 # a1 on left corner
+A1_Y=155
+
+
+# pvp tab selection
+pvp_tab_x=$(( 412 + 0 ))
+pvp_tab_y=$(( 162 + 0 ))
+
+# select left tab
+pvp_sel_left_x=149
+pvp_sel_left_y=363
+# pvp refresh page at bottom right corner
+pvp_ref_x=$(( 804 + 0 ))
+pvp_ref_y=$(( 605 + 0 ))
+
+# right arrow on pvp 
+pvp_arr_x=$(( 858 + 0 ))
+pvp_arr_y=$(( 368 + 0 ))
+
+
+
+
+# troops selection
+dev_x=659
+dev_y=621
+dec_x=759
+dec_y=621
+
+
+# faction tab selection
+faction_tab_x=711
+faction_tab_y=156
+
+
+

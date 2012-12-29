@@ -7,14 +7,15 @@ xdotool windowactivate --sync $WID
 source ./edge_env
 
 sleep 2;
-echo " $scout_x $scout_y"
+x=$pvp_arr_x
+y=$pvp_arr_y
 
-xdotool mousemove --sync $scout_x $scout_y 
-color=$( ./getcolor.py $scout_x $scout_y 0 )
-echo "$scout_x $scout_y $color"
+
+color=$( ./getcolor.py $x $y 3 )
+echo "$color"
 if [ $color -eq 0 ]
 then
     echo "found color"
-
 fi
 
+./getcolor.py $x $y 2 && ls
